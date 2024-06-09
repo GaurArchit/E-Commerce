@@ -31,18 +31,27 @@ const dataSchema = mongoose.Schema({
 
 const Data = mongoose.model("warehouse", dataSchema);
 //This is database
-Data.insertMany(list)
-  .then(() => {
-    console.log("Data inserted successfully");
-  })
-  .catch((error) => {
-    console.error("Error inserting data:", error);
-  });
+
+app.get("/admin", async (req, res) => {
+  await Data.insertMany(list)
+    .then(() => {
+      console.log("Data inserted successfully");
+    })
+    .catch((error) => {
+      console.error("Error inserting data:", error);
+    });
+});
 
 app.get("/database", async (req, res) => {
   const data = await Data.find();
   res.json(data);
   console.log(data);
+});
+
+app.get("/price", async (req, res) => {
+  const data = await Data.find({ price: { $lt: 100 } });
+  res.json(data);
+  console.log(data.length);
 });
 app.listen(7070, () => {
   console.log("Server is working ");
