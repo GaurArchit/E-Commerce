@@ -2,10 +2,12 @@ import express from "express";
 import list from "./database/data.js";
 import mongoose from "mongoose";
 import cors from "cors";
+import dotenv from "dotenv";
+
 const app = express();
 app.use(cors());
-
-const mongoURI = "mongodb+srv://admin:admin@warehouse.ilpo0us.mongodb.net/";
+dotenv.config();
+const mongoURI = process.env.monurl;
 mongoose
   .connect(mongoURI, {
     useNewUrlParser: true,
@@ -40,6 +42,7 @@ Data.insertMany(list)
 app.get("/database", async (req, res) => {
   const data = await Data.find();
   res.json(data);
+  console.log(data);
 });
 app.listen(7070, () => {
   console.log("Server is working ");
