@@ -22,17 +22,17 @@ mongoose
 
 const dataSchema = mongoose.Schema({
   id: String,
-  title: String,
-  author: String,
+  productname: String,
+  category: String,
   price: Number,
   img: String,
-  amount: String,
+  quantity: String,
 });
 
 const Data = mongoose.model("warehouse", dataSchema);
 //This is database
 
-app.get("/admin", async (req, res) => {
+app.get("/insertData", async (req, res) => {
   await Data.insertMany(list)
     .then(() => {
       console.log("Data inserted successfully");
@@ -53,6 +53,15 @@ app.get("/price", async (req, res) => {
   res.json(data);
   console.log(data.length);
 });
+
+/// Get call in which products will be fetch based on the category name
+
+app.get("/category/:zip", async (req, res) => {
+  const categoryName = req.params.zip;
+  const data = await Data.find({ category: categoryName });
+  res.json(data);
+});
+
 app.listen(7070, () => {
   console.log("Server is working ");
 });
