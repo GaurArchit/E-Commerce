@@ -28,7 +28,7 @@ const dataSchema = mongoose.Schema({
 });
 
 const Data = mongoose.model("warehouse", dataSchema);
-
+//This is database
 Data.insertMany(list)
   .then(() => {
     console.log("Data inserted successfully");
