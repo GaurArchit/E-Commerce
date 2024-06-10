@@ -1,0 +1,14 @@
+html 
+    head 
+        link(rel="stylesheet", href="/public/css/style.css")
+        title Stop & Shop
+    body 
+        .container 
+         h1#admin-title Stop &SHOP
+         #login-panel 
+            h3 Login to your account 
+            form(method="post" action="/price" name="loginForm")
+                input(type="text" name="email" placeholder="E-Mail")
+                input(type="password" name="password" placeholder="Password")
+                button(type="submit" id="loginBtn") Login
+        script(src="/public/js/main.js")
