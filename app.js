@@ -5,10 +5,12 @@ import { join, dirname } from "path";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import session from "express-session";
 
 const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 //Handling static pages in E-commerce Project
 app.set("view engine", "pug");
 app.use("/public", express.static(join(__dirname, "public")));
@@ -60,11 +62,39 @@ app.get("/price", async (req, res) => {
   res.json(data);
   console.log(data.length);
 });
+
+// Adding session functionality to the code as of now adding it on the root route that is admin
+app.use(
+  session({
+    name: "sessId", //this is name of the cookie that will be sent to the user broweser if this is not setup then a default name will come
+    resave: false, // this is a mandory field if not done will throw warning
+    saveUninitialized: true,
+    secret:
+      app.get("env") === "production"
+        ? process.env.sessionSecret
+        : "12312323dfdffffewdedergttgtg", //it is used to fectch the secreat key in case of dev or production environment
+    cookie: {
+      httpOnly: true, //it is used to set so that hacker dont react cookie value
+      maxAge: 18000000, // it is used to set the time till which the cookie is valid
+      secure: app.get("env") === "production" ? true : false,
+    },
+  })
+);
+
 //Just and example this will be updated as per the logic
 app.post("/price", async (req, res) => {
-  const data = await Data.find({ price: { $lt: 100 } });
-  res.json(data);
-  console.log(data.length);
+  console.log(req.body);
+
+  const { email, password } = req.body;
+  //Values as of now are hard coded it will be updated once we update the mongo db
+  if (email === "architgaur123@gmail.com" && password === "12345") {
+    req.session.user = "Archit"; //Storing the data in the session
+    const data = await Data.find({ price: { $lt: 100 } });
+
+    return res.json(data);
+  } else {
+    return res.redirect("/login");
+  }
 });
 
 /// Get call in which products will be fetch based on the category name
